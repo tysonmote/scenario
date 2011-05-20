@@ -6,80 +6,90 @@ block or by passing in a Module (or even both).
 
 Block:
 
-    describe_scenario :admin do |scenario|
-      define :setup_user do |name|
-        User.create( :name => name, :admin => true )
-      end
-    end
-    
-    describe "Admin pages" do
-      scenario :admin
-      
-      ...
-    end
+```ruby
+describe_scenario :admin do |scenario|
+  define :setup_user do |name|
+    User.create( :name => name, :admin => true )
+  end
+end
+
+describe "Admin pages" do
+  scenario :admin
+  
+  ...
+end
+```
 
 Module:
 
-    module AdminMethods
-      def setup_user( name )
-        User.create( :name => name, :admin => true )
-      end
-    end
-    
-    describe_scenario :admin, AdminMethods
-    
-    describe "Admin pages" do
-      scenario :admin
-      
-      ...
-    end
+```ruby
+module AdminMethods
+  def setup_user( name )
+    User.create( :name => name, :admin => true )
+  end
+end
+
+describe_scenario :admin, AdminMethods
+
+describe "Admin pages" do
+  scenario :admin
+  
+  ...
+end
+```
 
 Both:
 
-    module AdminMethods
-      def setup_user( name )
-        User.create( :name => name, :admin => true )
-      end
-    end
-    
-    describe_scenario :admin, AdminMethods do
-      define :admin?( user )
-        user.admin == true
-      end
-    end
-    
-    describe "Admin pages" do
-      scenario :admin
-      
-      ...
-    end
+```ruby
+module AdminMethods
+  def setup_user( name )
+    User.create( :name => name, :admin => true )
+  end
+end
+
+describe_scenario :admin, AdminMethods do
+  define :admin?( user )
+    user.admin == true
+  end
+end
+
+describe "Admin pages" do
+  scenario :admin
+  
+  ...
+end
+```
 
 Because scenarios are just Modules, you can use as many as you want:
 
-    describe "Admin pages" do
-      scenario :users
-      scenario :admin
-      
-      ...
-    end
+```ruby
+describe "Admin pages" do
+  scenario :users
+  scenario :admin
+  
+  ...
+end
+```
 
 And you can nest them:
 
-    describe "Login" do
-      scenario :login
-      
-      describe "as an admin" do
-        scenario :admin
-        
-        ...
-      end
-      
-      describe "as a regular user" do
-        scenario :user
-        
-        ...
-      end
-    end
+```ruby
+describe "Login" do
+  scenario :login
+  
+  describe "as an admin" do
+    scenario :admin
+    
+    ...
+  end
+  
+  describe "as a regular user" do
+    scenario :user
+    
+    ...
+  end
+end
+```
 
 Fixtures
 --------
@@ -89,8 +99,10 @@ hard-coded to `spec/scenarios/fixtures`. It will be configurable in a future
 version. Feel free to open a pull request or just monkey patch the `root()`
 method.
 
-    Scenario::Fixtures['html/sample.html'] # Returns contents of the
-                                           # fixture as a string
+```ruby
+Scenario::Fixtures['html/sample.html'] # Returns contents of the fixture as
+                                       # a string
+```
 
 `Scenario::Fixtures` caches the contents of the file so that the file only needs 
 to be read once.
