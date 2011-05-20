@@ -63,6 +63,24 @@ Because scenarios are just Modules, you can use as many as you want:
       ...
     end
 
+And you can nest them:
+
+    describe "Login" do
+      scenario :login
+      
+      describe "as an admin" do
+        scenario :admin
+        
+        ...
+      end
+      
+      describe "as a regular user" do
+        scenario :user
+        
+        ...
+      end
+    end
+
 Fixtures
 --------
 

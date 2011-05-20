@@ -36,7 +36,7 @@ describe_scenario :scenario_one do
   end
   
   define "zero_cool?" do
-    true
+    false
   end
 end
 
