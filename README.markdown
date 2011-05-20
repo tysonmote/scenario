@@ -7,7 +7,7 @@ block or by passing in a Module (or even both).
 Block:
 
 ```ruby
-describe_scenario :admin do |scenario|
+describe_scenario :admin do
   define :setup_user do |name|
     User.create( :name => name, :admin => true )
   end
