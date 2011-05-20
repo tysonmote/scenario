@@ -20,12 +20,6 @@ end
 
 describe_scenario :module_defined, ModuleDefined
 
-module ModuleDefined
-  def lol
-    "for reals"
-  end
-end
-
 describe_scenario :mixed_defined, ModuleDefined do
   def lol
     "overridden"
@@ -35,7 +29,6 @@ describe_scenario :mixed_defined, ModuleDefined do
     "added"
   end
 end
-
 
 describe_scenario :scenario_one do
   define :one do
