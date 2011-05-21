@@ -6,6 +6,12 @@ module Scenario
   
   private
   
+  begin
+    RSpecExampleGroup = RSpec::Core::ExampleGroup
+  rescue NameError
+    RSpecExampleGroup = Spec::Example::ExampleGroup
+  end
+  
   module RSpecExtensions
     
     # ExampleGroup methods
@@ -19,7 +25,7 @@ module Scenario
       end
       
     end
-    RSpec::Core::ExampleGroup.send :extend, Scenario::RSpecExtensions::ExampleGroupExtensions
+    RSpecExampleGroup.send :extend, Scenario::RSpecExtensions::ExampleGroupExtensions
     
     # Global methods.
     module ObjectExtensions

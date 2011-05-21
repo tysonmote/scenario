@@ -9,6 +9,10 @@ rescue Bundler::BundlerError => e
 end
 require 'rake'
 
+# ===========
+# = Jeweler =
+# ===========
+
 require 'jeweler'
 Jeweler::Tasks.new do |gem|
   # gem is a Gem::Specification... see http://docs.rubygems.org/read/chapter/20 for more options
@@ -19,26 +23,38 @@ Jeweler::Tasks.new do |gem|
   gem.description = %Q{Basic spec scenarios for RSpec. Also includes basic fixtures support.}
   gem.email = "tyson@tysontate.com"
   gem.authors = ["Tyson Tate"]
-  gem.add_development_dependency "rspec", "~> 2.3.0"
-  gem.add_development_dependency "yard", "~> 0.6.0"
-  gem.add_development_dependency "bundler", "~> 1.0.0"
-  gem.add_development_dependency "jeweler", "~> 1.5.2"
-  gem.add_development_dependency "rcov", ">= 0"
+  gem.add_dependency "rspec", ">= 1.3"
 end
 Jeweler::RubygemsDotOrgTasks.new
 
-require 'rspec/core'
-require 'rspec/core/rake_task'
-RSpec::Core::RakeTask.new(:spec) do |spec|
-  spec.pattern = FileList['spec/**/*_spec.rb']
-end
+# =========
+# = Specs =
+# =========
 
-RSpec::Core::RakeTask.new(:rcov) do |spec|
-  spec.pattern = 'spec/**/*_spec.rb'
-  spec.rcov = true
+spec_files = FileList['spec/**/*_spec.rb']
+begin
+  # 2.x
+  require 'rspec/core'
+  require 'rspec/core/rake_task'
+  RSpec::Core::RakeTask.new(:spec) do |spec|
+    spec.pattern = spec_files
+    spec.rspec_opts = ["--format", "documentation"]
+  end
+rescue LoadError
+  # 1.x
+  require 'spec'
+  require 'spec/rake/spectask'
+  Spec::Rake::SpecTask.new(:spec) do |spec|
+    spec.pattern = spec_files
+    spec.spec_opts = ["--format", "specdoc"]
+  end
 end
 
 task :default => :spec
+
+# ========
+# = Docs =
+# ========
 
 require 'yard'
 YARD::Rake::YardocTask.new
