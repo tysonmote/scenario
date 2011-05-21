@@ -114,6 +114,8 @@ to be read once.
 Version History
 ===============
 
+* 0.3.0 - Remove support for module-based scenarios, allow calling RSpec hooks
+  in scenarios.
 * 0.2.0 - Add support for RSpec 1.3+
 * 0.1.0 - Initial release with support for RSpec 2.x
 
