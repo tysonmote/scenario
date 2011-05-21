@@ -1,92 +1,97 @@
 Scenario
 ========
 
-Scenario brings basic "scenarios" to RSpec. You can define scenarios with a
-block or by passing in a Module (or even both).
+Scenarios is a super-simple way to move common setup and helper methods into cohesive "scenarios" that can be included easily in your specs. The advantage of a scenario over regular mixin modules is that you can use RSpec hooks (eg. `before :each {}`) to do the setup instead of having redundant, copy-pasted setup littering your specs.
 
-Block:
+Examples
+--------
 
 ```ruby
+# Describe your scenarios:
+
+describe_scenario :user do
+  before :all do
+    @user = User.create( :name => "Bob", :password => "foo", :admin => false )
+  end
+  
+  def login
+    visit( url( :login ) )
+    fill_in :name, :with => "Bob"
+    fill_in :password, :with => "foo"
+    click_button "Login"
+    response
+  end
+end
+
 describe_scenario :admin do
-  define :setup_user do |name|
-    User.create( :name => name, :admin => true )
+  before :all do
+    @user = User.create( :name => "Sally", :password => "bar", :admin => true )
+  end
+  
+  def login
+    visit( url( :login ) )
+    fill_in :name, :with => "Sally"
+    fill_in :password, :with => "bar"
+    click_button "Login"
+    response
   end
 end
 
-describe "Admin pages" do
-  scenario :admin
+# Write your specs:
+
+describe "Logging in" do
+  describe "as an user" do
+    scenario :user
+    
+    it "should log them in" do
+      login.should be_successful
+    end
+  end
   
-  ...
+  describe "as an admin" do
+    scenario :admin
+    
+    it "should log them in" do
+      login.should be_successful
+    end
+  end
 end
 ```
 
-Module:
+Because scenarios are simply blocks that are run in the context where they are included, you can use as many as you want:
 
 ```ruby
-module AdminMethods
-  def setup_user( name )
-    User.create( :name => name, :admin => true )
-  end
-end
-
-describe_scenario :admin, AdminMethods
-
-describe "Admin pages" do
-  scenario :admin
+describe "GET /message/new when database is down" do
+  scenario :user
+  scenario :database_down
   
-  ...
-end
-```
-
-Both:
-
-```ruby
-module AdminMethods
-  def setup_user( name )
-    User.create( :name => name, :admin => true )
+  it "should show fail whale" do
+    visit( "/message/new" )
+    response.should contain( "fail whale" )
   end
-end
-
-describe_scenario :admin, AdminMethods do
-  define :admin?( user )
-    user.admin == true
-  end
-end
-
-describe "Admin pages" do
-  scenario :admin
-  
-  ...
-end
-```
-
-Because scenarios are just Modules, you can use as many as you want:
-
-```ruby
-describe "Admin pages" do
-  scenario :users
-  scenario :admin
-  
-  ...
 end
 ```
 
 And you can nest them:
 
 ```ruby
-describe "Login" do
-  scenario :login
+describe "GET /message/new" do
+  scenario :user
   
-  describe "as an admin" do
-    scenario :admin
-    
-    ...
+  describe "when database is up" do
+    it "should not show fail whale" do
+      visit( "/message/new" )
+      response.should_not contain( "fail whale" )
+    end
   end
   
-  describe "as a regular user" do
-    scenario :user
+  describe "when database is down" do
+    scenario :database_down
     
-    ...
+    it "should show fail whale" do
+      visit( "/message/new" )
+      response.should contain( "fail whale" )
+    end
   end
 end
 ```

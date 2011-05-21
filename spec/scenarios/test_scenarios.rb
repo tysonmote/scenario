@@ -1,51 +1,33 @@
-describe_scenario :block_defined do
-  define :lol do
+describe_scenario :simple do
+  before :each do
+    @zomg_each = true
+  end
+  
+  before :all do
+    @zomg_all = true
+  end
+  
+  def lol
     "lol"
-  end
-  
-  define :zomg do
-    @zomg = true
-  end
-  
-  define :rad_params do |how_rad|
-    "This is #{how_rad} rad!"
-  end
-end
-
-module ModuleDefined
-  def lol
-    "for reals"
-  end
-end
-
-describe_scenario :module_defined, ModuleDefined
-
-describe_scenario :mixed_defined, ModuleDefined do
-  def lol
-    "overridden"
-  end
-  
-  def omg
-    "added"
   end
 end
 
 describe_scenario :scenario_one do
-  define :one do
+  def one
     "present"
   end
   
-  define "zero_cool?" do
+  def zero_cool?
     false
   end
 end
 
 describe_scenario :scenario_two do
-  define :two do
+  def two
     "also present"
   end
   
-  define "zero_cool?" do
+  def zero_cool?
     true
   end
 end

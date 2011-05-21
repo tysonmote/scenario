@@ -4,15 +4,17 @@ module Scenario
   
   class Scenarios
     
+    @@scenarios = {}
+    
     # Add a new scenario.
-    def self.register( name, modul )
-      @@scenarios ||= {}
-      @@scenarios[name.to_sym] = modul
+    def self.add( name, block )
+      @@scenarios[name.to_sym] = block
     end
     
-    # Get the scenario module for the given name.
+    # Get the scenario block for the given name.
     def self.for( name )
-      @@scenarios[name.to_sym] || ( raise "No scenario named #{name.inspect}." )
+      name = name.to_sym
+      @@scenarios[name]
     end
     
   end

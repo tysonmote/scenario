@@ -7,9 +7,11 @@ module Scenario
   private
   
   begin
-    RSpecExampleGroup = RSpec::Core::ExampleGroup
+    # 2.x
+    ExampleGroup = RSpec::Core::ExampleGroup
   rescue NameError
-    RSpecExampleGroup = Spec::Example::ExampleGroup
+    # 1.x
+    ExampleGroup = Spec::Example::ExampleGroup
   end
   
   module RSpecExtensions
@@ -17,34 +19,26 @@ module Scenario
     # ExampleGroup methods
     module ExampleGroupExtensions
       
-      # Tell Scenario which scenario you want to use
+      # Load a given scenario
       def scenario( name, &block )
-        modul = Scenario::Scenarios.for( name )
-        modul.module_exec( &block ) if block_given?
-        self.send( :include, modul )
+        @_scenario_context = name.to_sym
+        scenario = Scenario::Scenarios.for( name )
+        self.module_eval( &scenario )
       end
       
     end
-    RSpecExampleGroup.send :extend, Scenario::RSpecExtensions::ExampleGroupExtensions
+    ExampleGroup.send :extend, ExampleGroupExtensions
     
     # Global methods.
     module ObjectExtensions
       
-      # Set up a new scenario and add to the collection of scenarios.
-      def describe_scenario( name, base=nil, &block )
-        modul = base ? base.dup : Module.new
-        modul.module_exec( &block ) if block_given?
-        Scenario::Scenarios.register( name, modul )
-      end
-      
-      # Syntax sugar for defining a scenario method inside a `describe_scenario`
-      # block.
-      def define( method_name, &block )
-        self.send( :define_method, method_name, &block )
+      def describe_scenario( name, &block )
+        raise "Scenario #{name} has already been defined." if Scenario::Scenarios.for( name )
+        Scenario::Scenarios.add( name, block )
       end
       
     end
-    Object.send :include, Scenario::RSpecExtensions::ObjectExtensions
+    Object.send :include, ObjectExtensions
     
   end
   
