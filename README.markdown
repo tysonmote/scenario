@@ -107,6 +107,12 @@ Scenario::Fixtures['html/sample.html'] # Returns contents of the fixture as
 `Scenario::Fixtures` caches the contents of the file so that the file only needs 
 to be read once.
 
+Version History
+===============
+
+0.2.0 - Add support for RSpec 1.3+
+0.1.0 - Initial release with support for RSpec 2.x
+
 Contributing to Scenario
 ========================
  
