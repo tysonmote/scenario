@@ -100,8 +100,7 @@ version. Feel free to open a pull request or just monkey patch the `root()`
 method.
 
 ```ruby
-Scenario::Fixtures['html/sample.html'] # Returns contents of the fixture as
-                                       # a string
+Scenario::Fixtures['html/sample.html'] # Returns contents of the fixture as a string
 ```
 
 `Scenario::Fixtures` caches the contents of the file so that the file only needs 
