@@ -109,8 +109,8 @@ to be read once.
 Version History
 ===============
 
-0.2.0 - Add support for RSpec 1.3+
-0.1.0 - Initial release with support for RSpec 2.x
+* 0.2.0 - Add support for RSpec 1.3+
+* 0.1.0 - Initial release with support for RSpec 2.x
 
 Contributing to Scenario
 ========================
