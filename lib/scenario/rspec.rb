@@ -20,10 +20,22 @@ module Scenario
     module ExampleGroupExtensions
       
       # Load a given scenario
-      def scenario( name, &block )
+      def scenario( name, opts={}, &block )
         @_scenario_context = name.to_sym
         scenario = Scenario::Scenarios.for( name )
+        
+        # Load scenario
         self.module_eval( &scenario )
+        
+        # Set up
+        Array( opts[:setup] ).each do |subject|
+          self.module_eval do
+            before :all do
+              self.send "setup_#{subject}"
+            end
+          end
+        end
+        self.module_eval { before( :all, &block ) } if block_given?
       end
       
     end
