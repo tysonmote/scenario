@@ -38,6 +38,10 @@ module Scenario
         self.module_eval { before( :all, &block ) } if block_given?
       end
       
+      def setup_for( name, &block )
+        self.send( :define_method, "setup_#{name}", block )
+      end
+      
     end
     ExampleGroup.send :extend, ExampleGroupExtensions
     

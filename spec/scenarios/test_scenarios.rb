@@ -46,11 +46,12 @@ describe_scenario :scenario_two do
 end
 
 describe_scenario :setup_scenario do
-  def setup_thing1
+  
+  setup_for :thing1 do
     @thing1 = "set up"
   end
   
-  def setup_thing2( *params )
+  setup_for :thing2 do |*params|
     @thing2 = params
   end
   
