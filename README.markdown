@@ -3,6 +3,8 @@ Scenario
 
 Scenarios is a super-simple way to move common setup and helper methods into cohesive "scenarios" that can be included easily in your specs. The advantage of a scenario over regular mixin modules is that you can use RSpec hooks (eg. `before :each {}`) to do the setup instead of having redundant, copy-pasted setup littering your specs.
 
+Scenario also includes a basic DSL for performing setup atomically. That is, instead of doing expensive setup in a `before :all` block that is always run, you can run only the setup that you need in a given `describe` with the Scenario DSL.
+
 Examples
 --------
 
@@ -96,6 +98,77 @@ describe "GET /message/new" do
 end
 ```
 
+Setup
+-----
+
+Setup is executed `before :all`.
+
+```ruby
+describe_scenario :user do
+  setup_for :user do |name, password|
+    name ||= "Bob"
+    password ||= "foo"
+    @user = User.create( :name => name, :password => password )
+  end
+  
+  setup_for :admin do |name, password|
+    name ||= "Sally"
+    password ||= "bar"
+    @user = User.create( :name => name, :password => password, :admin => true )
+  end
+  
+  def login
+    visit( url( :login ) )
+    fill_in :name, :with => "Bob"
+    fill_in :password, :with => "foo"
+    click_button "Login"
+    response
+  end
+end
+
+# Pass a hash:
+
+describe "One user" do
+  scenario :user, :setup => :user
+  
+  it "has one user" do
+    User.count.should == 1
+  end
+end
+
+describe "Two users" do
+  scenario :user, :setup => [:user, :admin]
+  
+  it "has two users" do
+    User.count.should == 2
+  end
+end
+
+# Or pass a block:
+
+describe "One user" do
+  scenario :user do
+    setup_user( "Sam" )
+  end
+  
+  it "has one user" do
+    User.count.should == 1
+  end
+end
+
+# Or both!
+
+describe "Two users" do
+  scenario :user, :setup => :user do
+    setup_admin( "Steph" )
+  end
+  
+  it "has two users" do
+    User.count.should == 2
+  end
+end
+```
+
 Fixtures
 --------
 
@@ -114,6 +187,7 @@ to be read once.
 Version History
 ===============
 
+* 0.3.1 - Add "setup" syntax.
 * 0.3.0 - Remove support for module-based scenarios, allow calling RSpec hooks
   in scenarios.
 * 0.2.0 - Add support for RSpec 1.3+
