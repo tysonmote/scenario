@@ -115,13 +115,15 @@ describe "Shared example groups" do
     it_should_behave_like "without scenario in the shared group"
   end
   
-  context "with scenario in shared group" do
-    it_should_behave_like "with scenario in the shared group"
-    
-    it "shouldn't leak" do
-      @scenario_all.should be_nil
-      @scenario_each.should be_nil
-      lambda { scenario_method }.should raise_error
+  if $rspec2
+    context "with scenario in shared group" do
+      it_should_behave_like "with scenario in the shared group"
+      
+      it "shouldn't leak" do
+        @scenario_all.should be_nil
+        @scenario_each.should be_nil
+        lambda { scenario_method }.should raise_error
+      end
     end
   end
 end
