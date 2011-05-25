@@ -187,6 +187,7 @@ to be read once.
 Version History
 ===============
 
+* 0.3.2 - Explicitly require RSpec.
 * 0.3.1 - Add "setup" syntax.
 * 0.3.0 - Remove support for module-based scenarios, allow calling RSpec hooks
   in scenarios.
