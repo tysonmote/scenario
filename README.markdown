@@ -1,9 +1,10 @@
 Scenario
 ========
 
-Scenarios is a super-simple way to move common setup and helper methods into cohesive "scenarios" that can be included easily in your specs. The advantage of a scenario over regular mixin modules is that you can use RSpec hooks (eg. `before :each {}`) to do the setup instead of having redundant, copy-pasted setup littering your specs.
+Scenario provides a simple way to move common setup and helper methods into cohesive "scenarios" that are easy to include in your specs. The advantage of a scenario over regular mixin modules is that you can use RSpec hooks (eg. `before :each {}`) to do the setup instead of having redundant, copy-pasted setup code littering your specs.
 
-Scenario also includes a basic DSL for performing setup atomically. That is, instead of doing expensive setup in a `before :all` block that is always run, you can run only the setup that you need in a given `describe` with the Scenario DSL.
+Scenario also includes a basic DSL for performing setup atomically. That is, instead of doing expensive setup in a `before :all` block that is always run
+regardless of which pieces you need, you can run only the setup that you need in a given `describe` with the Scenario DSL.
 
 Examples
 --------
@@ -175,7 +176,7 @@ Fixtures
 Basic fixture support is also included. (Please note that fixtures are currently 
 hard-coded to `spec/scenarios/fixtures`. It will be configurable in a future
 version. Feel free to open a pull request or just monkey patch the `root()`
-method.
+method on `Scenario::Fixtures`.
 
 ```ruby
 Scenario::Fixtures['html/sample.html'] # Returns contents of the fixture as a string
