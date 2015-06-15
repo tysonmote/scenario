@@ -29,13 +29,11 @@ module Scenario
         
         # Set up
         Array( opts[:setup] ).each do |subject|
-          self.module_eval do
-            before :all do
-              self.send "setup_#{subject}"
-            end
+          before do
+            self.__send__ "setup_#{subject}"
           end
         end
-        self.module_eval { before( :all, &block ) } if block_given?
+        before(&block) if block_given?
       end
       
       def setup_for( name, &block )
